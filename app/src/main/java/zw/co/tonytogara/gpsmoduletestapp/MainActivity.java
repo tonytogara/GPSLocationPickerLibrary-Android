@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
     {
         pDialog = new ProgressDialog(MainActivity.this);
         pDialog.setIndeterminate(true);
-        pDialog.setMessage("Please wait while loading...");
+        pDialog.setMessage("Please wait while loading....");
         pDialog.setCancelable(false);
 
         if (!pDialog.isShowing())
