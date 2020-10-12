@@ -10,7 +10,10 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import zw.co.tonytogara.gpslocationpicker.GPSLocationPicker;
 
@@ -89,15 +92,89 @@ public class MainActivity extends AppCompatActivity
 
                     try
                     {
-                        int seconds = 10;
-                        sleep(1000 * seconds);
+                        // set location checking timeout-duration
+                        int seconds = 25;
+                        boolean isLocationFound = false;
 
-                        if (GPSLocationPicker.isLocationFound)
+                        for (int x = 0; x < seconds; x++)
+                        {
+                            // pause for a second
+                            sleep(1000);
+                            Log.d("SYSTEM_STATUS", "LISTENING_FOR_LOCATION - " + x);
+
+                            if (GPSLocationPicker.isLocationFound)
+                            {
+                                Log.d("SYSTEM_STATUS", "LOCATION_FOUND - " + x);
+
+                                isLocationFound = true;
+                                break;
+                            }
+                        }
+
+                        // check if location has been found
+                        if (isLocationFound)
                         {
                             Log.d("SYSTEM_STATUS", GPSLocationPicker.USER_LOCATION);
-                        }else
+
+                            // show Toast Message using main thread
+                            runOnUiThread(new Runnable()
+                            {
+                                public void run()
+                                {
+                                    Toast.makeText(getBaseContext(), "Location Found - " +
+                                            GPSLocationPicker.USER_LOCATION + " ; " +
+                                            GPSLocationPicker.LOCATION_STREET_NAME, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        else
                         {
                             Log.d("SYSTEM_STATUS", "Location not found");
+
+                            // show Toast Message using main thread
+                            runOnUiThread(new Runnable()
+                            {
+                                public void run()
+                                {
+                                    Toast.makeText(getBaseContext(), "Location not found", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            // show load page
+                            Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    "Location failed to load.",
+                                    Snackbar.LENGTH_INDEFINITE)
+                                    .setAction("Retry", new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            // check if location has been found
+                                            if (GPSLocationPicker.isLocationFound)
+                                            {
+                                                Log.d("SYSTEM_STATUS", GPSLocationPicker.USER_LOCATION);
+
+                                                // show Toast Message using main thread
+                                                runOnUiThread(new Runnable()
+                                                {
+                                                    public void run()
+                                                    {
+                                                        Toast.makeText(getBaseContext(), "Location Found - " +
+                                                                GPSLocationPicker.USER_LOCATION + " ; " +
+                                                                GPSLocationPicker.LOCATION_STREET_NAME, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            }else
+                                            {
+                                                // request for a location
+                                                mGPSLocationPicker.requestLocation();
+
+                                                // check Location by running a 10 seconds counter
+                                                checkLocation();
+                                            }
+                                        }
+                                    }).show();
                         }
 
                         hidepDialog();
