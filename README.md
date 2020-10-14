@@ -1,7 +1,6 @@
 # GPSLocationPickerLibrary-Android
-Android GPS Location Picker Library 
-
 Retrieve device GPS Location using a few simple steps. 
+- Access GPS Location, Town, City, Street Name
 
 Accessing Library
 Gradle:
