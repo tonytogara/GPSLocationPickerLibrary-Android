@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity
                     mGPSLocationPicker.mLocationRequestCount = 0;
                     mGPSLocationPicker.mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             0, 0, mGPSLocationPicker.mLocationListener);
+                    mGPSLocationPicker.mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                            0, 0, mGPSLocationPicker.mLocationListener);
                 }
             }else
             {
@@ -89,7 +91,6 @@ public class MainActivity extends AppCompatActivity
             {
                 public void run ()
                 {
-
                     try
                     {
                         // set location checking timeout-duration

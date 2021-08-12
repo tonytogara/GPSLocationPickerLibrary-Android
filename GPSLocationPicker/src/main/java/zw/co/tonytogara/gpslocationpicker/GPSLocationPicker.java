@@ -78,7 +78,7 @@ public class GPSLocationPicker
                 Toast.makeText(activity, "Location Permission is required for this app to run.", Toast.LENGTH_LONG).show();
 
                 // trigger run time request permission dialog (If dialog does not appear, make sure the permission has also been added in your manifest)
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             } else
                 {
                     // retrieve user location
@@ -200,24 +200,27 @@ public class GPSLocationPicker
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
+            public void onStatusChanged(String provider, int status, Bundle extras)
+            {
+                Log.d(LibConstants.LOG_SYSTEM_STATUS,"onStatusChanged: " + "Do something with the provider-> " + status);
             }
 
             @Override
-            public void onProviderEnabled(String provider) {
-
+            public void onProviderEnabled(String provider)
+            {
+                Log.d(LibConstants.LOG_SYSTEM_STATUS,"onProviderEnabled: " + "Do something with the provider-> " + provider);
             }
 
             @Override
-            public void onProviderDisabled(String provider) {
-
+            public void onProviderDisabled(String provider)
+            {
+                Log.d(LibConstants.LOG_SYSTEM_STATUS,"onProviderDisabled: " + "Do something with the provider-> " + provider);
             }
         };
 
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
         else
         {
@@ -225,6 +228,7 @@ public class GPSLocationPicker
             {
                 mLocationRequestCount = 0;
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,mLocationListener);
             }catch (Exception e)
             {
                 Toast.makeText(activity, "Unable to access setup device, please contact admin!", Toast.LENGTH_LONG).show();
